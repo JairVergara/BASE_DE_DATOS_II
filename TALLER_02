@@ -1,0 +1,207 @@
+-- Crear una base de datos llamada fidelizacion
+CREATE DATABASE fidelizacion;
+
+-- Usar la base de datos para crear las tablas ahí
+USE fidelizacion;
+
+-- Esta tabla guarda los tipos de perfiles que puede tener un usuario
+CREATE TABLE perfiles (
+  id INT AUTO_INCREMENT PRIMARY KEY,            -- Identificador único
+  nombre_perfil VARCHAR(50),                    -- Nombre del perfil (ej: RRHH, TI)
+  descripcion_perfil VARCHAR(100),              -- Breve descripción del perfil
+  fecha_vigencia DATE,                          -- Hasta cuándo es válido el perfil
+  encargado_perfil VARCHAR(100)                 -- Persona encargada del perfil (nombre)
+);
+
+
+-- Tabla de los colaboradores de la empresa
+CREATE TABLE usuarios (
+  id INT AUTO_INCREMENT PRIMARY KEY,            -- Identificador único del usuario
+  nombre VARCHAR(50),                           -- Nombre del usuario
+  apellido VARCHAR(50),                         -- Apellido del usuario
+  estado VARCHAR(20),                           -- activo o inactivo
+  contrasena VARCHAR(100),                      -- Contraseña de acceso (simulada)
+  cargo VARCHAR(50),                            -- Cargo o puesto que ocupa
+  salario DECIMAL(10,2),                        -- Sueldo en balboas
+  fecha_ingreso DATE,                           -- Fecha en la que ingresó a la empresa
+  profile_id INT                                -- Perfil que tiene asignado (relación con perfiles.id)
+);
+
+
+-- Registra cada intento de inicio de sesión de los usuarios
+CREATE TABLE login (
+  id INT AUTO_INCREMENT PRIMARY KEY,            -- Identificador del intento
+  user_id INT,                                  -- ID del usuario que intenta iniciar sesión
+  fecha_hora_login DATETIME,                    -- Fecha y hora exacta del intento
+  estado_login VARCHAR(20)                      -- Resultado: exitoso o fallido
+);
+
+-- Guarda las actividades en las que participan los usuarios
+CREATE TABLE actividades (
+  id INT AUTO_INCREMENT PRIMARY KEY,            -- ID único de la actividad
+  user_id INT,                                  -- Usuario que participó
+  fecha_actividad DATE,                         -- Fecha de la actividad
+  tipo_actividad VARCHAR(50),                   -- Tipo de actividad (Webinar, Cultural, etc.)
+  descripcion VARCHAR(100),                     -- Breve descripción
+  puntos_otorgados INT                          -- Cuántos puntos ganó el usuario
+);
+
+INSERT INTO usuarios (id, nombre, apellido, estado, contrasena, cargo, salario, fecha_ingreso, profile_id) VALUES
+(1, 'Ana', 'Gómez', 'activo', 'clave1', 'Analista RRHH', 1838.47, '2024-12-12', 2),
+(2, 'Luis', 'Martínez', 'activo', 'clave2', 'Soporte Técnico', 1894.93, '2020-12-15', 3),
+(3, 'María', 'Rodríguez', 'activo', 'clave3', 'Contadora', 1316.05, '2024-04-30', 4),
+(4, 'Carlos', 'Pérez', 'activo', 'clave4', 'Vendedor Senior', 1955.18, '2023-02-08', 5),
+(5, 'Sofía', 'López', 'activo', 'clave5', 'Diseñadora Gráfica', 1718.70, '2023-10-12', 6),
+(6, 'Pedro', 'Acosta', 'activo', 'clave6', 'Supervisor Logística', 1763.48, '2022-09-05', 7),
+(7, 'Daniela', 'Torres', 'activo', 'clave7', 'Desarrolladora', 1643.45, '2020-01-23', 8),
+(8, 'Jorge', 'Díaz', 'activo', 'clave8', 'Aux. Almacén', 1380.77, '2020-03-20', 9),
+(9, 'Elena', 'Morales', 'activo', 'clave9', 'Operaria Producción', 1080.11, '2025-02-19', 10),
+(10, 'Rafael', 'Vega', 'activo', 'clave10', 'Administrador', 711.68, '2021-07-06', 1),
+(11, 'Clara', 'Núñez', 'activo', 'clave11', 'Diseñadora UI', 951.26, '2023-04-21', 2),
+(12, 'Diego', 'Suárez', 'activo', 'clave12', 'Ingeniero DevOps', 1503.12, '2020-10-05', 3),
+(13, 'Laura', 'Campos', 'activo', 'clave13', 'Auxiliar RH', 883.53, '2020-09-14', 4),
+(14, 'Hugo', 'Herrera', 'activo', 'clave14', 'Ejecutivo Comercial', 1679.51, '2024-06-08', 5),
+(15, 'Paula', 'Mena', 'activo', 'clave15', 'Especialista Finanzas', 1676.64, '2020-04-19', 6),
+(16, 'Iván', 'Fernández', 'activo', 'clave16', 'Tester QA', 1349.99, '2020-04-28', 7),
+(17, 'Nadia', 'Santos', 'activo', 'clave17', 'Logística Jr.', 1918.78, '2020-05-19', 8),
+(18, 'Óscar', 'Ortiz', 'activo', 'clave18', 'Operario Bodega', 1324.47, '2024-08-11', 9),
+(19, 'Gabriela', 'Ruiz', 'activo', 'clave19', 'CTO', 730.36, '2020-02-17', 10),
+(20, 'Tomás', 'Ibarra', 'activo', 'clave20', 'Becario TI', 1306.79, '2020-06-23', 1);
+
+
+INSERT INTO perfiles (id, nombre_perfil, descripcion_perfil, fecha_vigencia, encargado_perfil) VALUES
+(1, 'Administración', 'Encargados de gestión administrativa', '2025-12-31', 'Rafael Vega'),
+(2, 'Recursos Humanos', 'Gestión y desarrollo del personal', '2025-12-31', 'Ana Gómez'),
+(3, 'Finanzas', 'Control presupuestario y contabilidad', '2025-12-31', 'María Rodríguez'),
+(4, 'Ventas', 'Equipo de ventas y atención al cliente', '2025-12-31', 'Carlos Pérez'),
+(5, 'Marketing', 'Publicidad, diseño y marca', '2025-12-31', 'Hugo Herrera'),
+(6, 'Soporte Técnico', 'Atención técnica a empleados', '2025-12-31', 'Luis Martínez'),
+(7, 'Desarrollo TI', 'Equipo de programación y QA', '2025-12-31', 'Iván Fernández'),
+(8, 'Logística', 'Almacén, transporte y entregas', '2025-12-31', 'Pedro Acosta'),
+(9, 'Producción', 'Operarios y maquinaria de planta', '2025-12-31', 'Óscar Ortiz'),
+(10, 'Dirección', 'Altos mandos y estrategia', '2025-12-31', 'Gabriela Ruiz');
+
+
+INSERT INTO login (user_id, fecha_hora_login, estado_login) VALUES
+(1, '2025-06-01 08:00:00', 'exitoso'),
+(2, '2025-06-01 08:05:00', 'exitoso'),
+(3, '2025-06-01 08:10:00', 'exitoso'),
+(4, '2025-06-01 08:15:00', 'exitoso'),
+(5, '2025-06-01 08:20:00', 'exitoso'),
+(6, '2025-06-01 08:25:00', 'exitoso'),
+(7, '2025-06-01 08:30:00', 'exitoso'),
+(8, '2025-06-01 08:35:00', 'exitoso'),
+(9, '2025-06-01 08:40:00', 'exitoso'),
+(10, '2025-06-01 08:45:00', 'exitoso'),
+(11, '2025-06-01 08:50:00', 'exitoso'),
+(12, '2025-06-01 08:55:00', 'exitoso'),
+(13, '2025-06-01 09:00:00', 'exitoso'),
+(14, '2025-06-01 09:05:00', 'exitoso'),
+(15, '2025-06-01 09:10:00', 'exitoso'),
+(16, '2025-06-01 09:15:00', 'exitoso'),
+(17, '2025-06-01 09:20:00', 'exitoso'),
+(18, '2025-06-01 09:25:00', 'exitoso'),
+(19, '2025-06-01 09:30:00', 'exitoso'),
+(20, '2025-06-01 09:35:00', 'exitoso');
+
+
+INSERT INTO actividades (user_id, fecha_actividad, tipo_actividad, descripcion, puntos_otorgados) VALUES
+(19, '2024-07-01', 'Deportivo', 'Actividad 1', 79),
+(6, '2024-07-16', 'Deportivo', 'Actividad 2', 39),
+(18, '2024-07-31', 'Webinar', 'Actividad 3', 71),
+(13, '2024-08-30', 'Cultural', 'Actividad 5', 35),
+(5, '2024-10-14', 'Cultural', 'Actividad 8', 55),
+(12, '2024-10-29', 'Deportivo', 'Actividad 9', 57),
+(10, '2024-11-13', 'Cultural', 'Actividad 10', 31),
+(16, '2024-11-28', 'Deportivo', 'Actividad 11', 75),
+(7, '2024-12-13', 'Webinar', 'Actividad 12', 29),
+(3, '2025-01-12', 'Cultural', 'Actividad 14', 36),
+(1, '2025-02-11', 'Deportivo', 'Actividad 16', 77),
+(4, '2025-02-26', 'Cultural', 'Actividad 17', 69),
+(17, '2025-03-13', 'Deportivo', 'Actividad 18', 67),
+(9, '2025-03-28', 'Cultural', 'Actividad 19', 53),
+(2, '2025-05-27', 'Deportivo', 'Actividad 23', 34),
+(14, '2025-06-11', 'Webinar', 'Actividad 24', 32);
+
+
+
+CREATE OR REPLACE VIEW v_DesempenoColaboradores AS
+SELECT
+  u.id,
+  CONCAT(u.nombre, ' ', u.apellido) AS nombre_completo,
+  u.cargo,
+  u.salario,
+  u.fecha_ingreso,
+  IFNULL(SUM(a.puntos_otorgados), 0) AS total_puntos_fidelizacion_acumulados,
+  IFNULL(AVG(a.puntos_otorgados), 0) AS promedio_puntos_por_actividad,
+  CASE
+    WHEN IFNULL(SUM(a.puntos_otorgados), 0) > 500 THEN 'Excelente'
+    WHEN IFNULL(SUM(a.puntos_otorgados), 0) BETWEEN 200 AND 500 THEN 'Bueno'
+    ELSE 'Regular'
+  END AS estado_fidelizacion,
+  DATEDIFF(CURDATE(), (
+    SELECT MAX(l.fecha_hora_login)
+    FROM login l
+    WHERE l.user_id = u.id AND l.estado_login = 'exitoso'
+  )) AS dias_desde_ultimo_login
+FROM usuarios u
+LEFT JOIN actividades a ON a.user_id = u.id
+GROUP BY u.id;
+
+CREATE OR REPLACE VIEW v_actividadesPorPerfil AS
+SELECT
+  p.nombre_perfil,
+  p.descripcion_perfil,
+  COUNT(u.id) AS cantidad_usuarios_con_este_perfil,
+  IFNULL(COUNT(a.id), 0) AS total_actividades_participadas_por_perfil,
+  ROUND(IFNULL(SUM(a.puntos_otorgados) / NULLIF(COUNT(u.id), 0), 0), 2) AS promedio_puntos_por_usuario_en_este_perfil,
+  ROUND(
+    IFNULL(
+      (COUNT(a.id) / NULLIF((SELECT COUNT(*) FROM actividades), 0)) * 100,
+      0
+    ), 2
+  ) AS porcentaje_participacion_total
+FROM perfiles p
+LEFT JOIN usuarios u ON u.profile_id = p.id
+LEFT JOIN actividades a ON a.user_id = u.id
+GROUP BY p.id;
+
+CREATE OR REPLACE VIEW v_historialLoginDetallado AS
+SELECT
+  u.nombre AS nombre_usuario,
+  u.apellido AS apellido_usuario,
+  u.cargo AS cargo_usuario,
+  l.fecha_hora_login,
+  l.estado_login,
+  TIMESTAMPDIFF(MINUTE,
+    LAG(l.fecha_hora_login) OVER (PARTITION BY l.user_id ORDER BY l.fecha_hora_login),
+    l.fecha_hora_login
+  ) AS tiempo_desde_anterior_login
+FROM login l
+JOIN usuarios u ON u.id = l.user_id
+ORDER BY u.id, l.fecha_hora_login;
+
+
+SELECT nombre_completo, cargo, total_puntos_fidelizacion_acumulados
+FROM v_DesempenoColaboradores
+ORDER BY total_puntos_fidelizacion_acumulados DESC
+LIMIT 5;
+
+
+SELECT nombre_perfil, porcentaje_participacion_total
+FROM v_actividadesPorPerfil
+ORDER BY porcentaje_participacion_total ASC
+LIMIT 3;
+
+SELECT nombre_completo, cargo, dias_desde_ultimo_login
+FROM v_DesempenoColaboradores
+WHERE dias_desde_ultimo_login > 30
+ORDER BY dias_desde_ultimo_login DESC;
+
+SELECT
+  DATE_FORMAT(fecha_hora_login, '%Y-%m') AS mes,
+  SUM(estado_login = 'exitoso') AS logins_exitosos,
+  SUM(estado_login = 'fallido') AS logins_fallidos
+FROM login
+GROUP BY mes
+ORDER BY mes;
