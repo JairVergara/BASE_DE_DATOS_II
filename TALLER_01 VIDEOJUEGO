@@ -1,0 +1,107 @@
+CREATE DATABASE videojuego_rpg;
+USE videojuego_rpg;
+
+-- Tabla: Jugadores
+CREATE TABLE jugador (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre_usuario VARCHAR(50),
+    nivel INT,
+    experiencia INT
+);
+
+-- Tabla: Personajes
+CREATE TABLE personaje (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50),
+    clase VARCHAR(30),
+    salud INT,
+    energia INT,
+    id_jugador INT,
+    FOREIGN KEY (id_jugador) REFERENCES jugador(id)
+);
+
+-- Tabla: Objetos
+CREATE TABLE objeto (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50),
+    tipo VARCHAR(30),  -- arma, poción, etc.
+    efecto VARCHAR(100)
+);
+
+-- Tabla: Inventario (relación personaje-objeto)
+CREATE TABLE inventario (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_personaje INT,
+    id_objeto INT,
+    cantidad INT,
+    FOREIGN KEY (id_personaje) REFERENCES personaje(id),
+    FOREIGN KEY (id_objeto) REFERENCES objeto(id)
+);
+
+-- Tabla: Misiones
+CREATE TABLE mision (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100),
+    descripcion TEXT,
+    recompensa_experiencia INT
+);
+
+-- Tabla: Logros
+CREATE TABLE logro (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    descripcion VARCHAR(100)
+);
+
+-- Tabla: Logros por jugador
+CREATE TABLE jugador_logro (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_jugador INT,
+    id_logro INT,
+    fecha DATE,
+    FOREIGN KEY (id_jugador) REFERENCES jugador(id),
+    FOREIGN KEY (id_logro) REFERENCES logro(id)
+);
+
+
+
+-- Jugador
+INSERT INTO jugador (nombre_usuario, nivel, experiencia)
+VALUES ('DarkKnight507', 5, 1200);
+
+-- Personaje
+INSERT INTO personaje (nombre, clase, salud, energia, id_jugador)
+VALUES ('Elandor', 'Guerrero', 150, 80, 1);
+
+-- Objetos
+INSERT INTO objeto (nombre, tipo, efecto) VALUES
+('Espada de Hierro', 'arma', 'Ataque +15'),
+('Poción de Vida', 'pocion', 'Restaura 50 de salud');
+
+-- Inventario
+INSERT INTO inventario (id_personaje, id_objeto, cantidad) VALUES
+(1, 1, 1),
+(1, 2, 3);
+
+-- Misiones
+INSERT INTO mision (nombre, descripcion, recompensa_experiencia) VALUES
+('Derrota al Dragón', 'Elimina al dragón en las montañas rojas.', 500),
+('Recupera el amuleto', 'Busca el amuleto robado en la cueva.', 300);
+
+-- Logros
+INSERT INTO logro (descripcion) VALUES
+('Primera Misión Completada'),
+('Derrotaste al jefe final');
+
+-- Logros obtenidos por el jugador
+INSERT INTO jugador_logro (id_jugador, id_logro, fecha) VALUES
+(1, 1, '2025-06-13');
+
+
+docker run --name juego_rpg -e MARIADB_ROOT_PASSWORD=admin123 -e MARIADB_DATABASE=videojuego_rpg -p 3308:3306 -d mariadb
+
+
+docker exec -it juego_rpg mysql -u root -p
+# Escribe: admin123
+
+USE videojuego_rpg;
+SHOW TABLES;
