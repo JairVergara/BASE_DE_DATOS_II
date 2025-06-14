@@ -1,0 +1,79 @@
+-- Crear la base de datos
+CREATE DATABASE tiendita;
+USE tiendita;
+
+-- Tabla de categorías
+CREATE TABLE category (
+    name VARCHAR(50) PRIMARY KEY
+);
+
+-- Tabla de productos
+CREATE TABLE product (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    price DECIMAL(10,2),  -- Precio en balboas (B/.)
+    category_name VARCHAR(50),
+    FOREIGN KEY (category_name) REFERENCES category(name)
+);
+
+-- Tabla para alimentos
+CREATE TABLE food (
+    product_id INT PRIMARY KEY,
+    expiration_date DATE,
+    calories INT,
+    FOREIGN KEY (product_id) REFERENCES product(id)
+);
+
+-- Tabla para muebles
+CREATE TABLE furniture (
+    product_id INT PRIMARY KEY,
+    manufacture_date DATE,
+    FOREIGN KEY (product_id) REFERENCES product(id)
+);
+
+-- Tabla de pedidos
+CREATE TABLE orden (
+    id INT AUTO_INCREMENT PRIMARY KEY
+);
+
+-- Tabla de líneas de pedido
+CREATE TABLE order_line (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT,
+    product_id INT,
+    quantity INT,
+    FOREIGN KEY (order_id) REFERENCES orden(id),
+    FOREIGN KEY (product_id) REFERENCES product(id)
+);
+
+-- Insertar categorías
+INSERT INTO category VALUES ('Food');
+INSERT INTO category VALUES ('Furniture');
+
+-- Insertar productos con precios en balboas
+INSERT INTO product (name, price, category_name) VALUES 
+('Cereal', 3.75, 'Food'),           -- B/. 3.75
+('Leche', 1.25, 'Food'),            -- B/. 1.25
+('Silla ergonómica', 120.00, 'Furniture'), -- B/. 120.00
+('Mesa comedor', 350.50, 'Furniture');     -- B/. 350.50
+
+-- Insertar detalles en tabla food
+INSERT INTO food VALUES 
+(1, '2025-10-01', 250),   -- Cereal
+(2, '2025-06-30', 150);   -- Leche
+
+-- Insertar detalles en tabla furniture
+INSERT INTO furniture VALUES 
+(3, '2025-04-01'),       -- Silla
+(4, '2025-03-15');       -- Mesa
+
+-- Insertar pedidos
+INSERT INTO orden VALUES ();  -- ID 1
+INSERT INTO orden VALUES ();  -- ID 2
+
+-- Insertar líneas de pedido
+INSERT INTO order_line (order_id, product_id, quantity) VALUES 
+(1, 1, 3),  -- 3 cereales
+(1, 2, 2),  -- 2 leches
+(2, 3, 1),  -- 1 silla
+(2, 4, 1);  -- 1 mesa
